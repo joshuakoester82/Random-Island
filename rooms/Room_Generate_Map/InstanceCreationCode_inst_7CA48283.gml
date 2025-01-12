@@ -1,0 +1,4 @@
+event_inherited();  // Get all parent object functionality
+parameter_name = "Lake Modifier";
+parameter_variable = "wrld_lake_modifier";
+change_amount = 0.01;
