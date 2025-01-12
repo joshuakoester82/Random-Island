@@ -51,7 +51,7 @@ function wrld_generate() {
     
     // Second pass
     wrld_reset_noise();
-    wrld_generate_biomes();]
+    wrld_generate_biomes();
 	
 	// Third pass
 	// TODO: Add river/bridge generation
