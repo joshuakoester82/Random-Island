@@ -96,6 +96,11 @@ function wrld_generate_geography() {
     var beach_threshold = min(global.wrld_geography_beach, global.wrld_geography_plains);
     var plains_threshold = min(global.wrld_geography_plains, global.wrld_geography_hills);
     var hills_threshold = global.wrld_geography_hills; // Mountains are always above this
+	
+	global.wrld_geography_plains = min(global.wrld_geography_plains, global.wrld_geography_hills);
+	global.wrld_geography_beach = min(global.wrld_geography_beach, global.wrld_geography_plains);
+	global.wrld_geography_shallow_water = min(global.wrld_geography_shallow_water, global.wrld_geography_beach);
+	global.wrld_geography_deep_water = min(global.wrld_geography_deep_water, global.wrld_geography_shallow_water);
     
     for(var xx = 0; xx < global.wrld_width; xx++) {
         for(var yy = 0; yy < global.wrld_height; yy++) {
@@ -200,6 +205,38 @@ function wrld_cleanup() {
     if(ds_exists(global.wrld_grid, ds_type_grid)) {
         ds_grid_destroy(global.wrld_grid);
     }
+}
+
+function enforce_threshold_relationships() {
+    // Geography thresholds - each value must stay between its neighbors
+    global.wrld_geography_deep_water = min(max(global.wrld_geography_deep_water, 0), global.wrld_geography_shallow_water);
+    global.wrld_geography_shallow_water = min(max(global.wrld_geography_shallow_water, 
+        global.wrld_geography_deep_water), 
+        global.wrld_geography_beach);
+        
+    global.wrld_geography_beach = min(max(global.wrld_geography_beach, 
+        global.wrld_geography_shallow_water), 
+        global.wrld_geography_plains);
+        
+    global.wrld_geography_plains = min(max(global.wrld_geography_plains, 
+        global.wrld_geography_beach), 
+        global.wrld_geography_hills);
+        
+    global.wrld_geography_hills = max(global.wrld_geography_hills, 
+        global.wrld_geography_plains);
+        
+    // Biome thresholds
+    global.wrld_biome_lake = min(max(global.wrld_biome_lake, 0), global.wrld_biome_swamp);
+    global.wrld_biome_swamp = min(max(global.wrld_biome_swamp,
+        global.wrld_biome_lake),
+        global.wrld_biome_plains);
+        
+    global.wrld_biome_plains = min(max(global.wrld_biome_plains,
+        global.wrld_biome_swamp),
+        global.wrld_biome_forest);
+        
+    global.wrld_biome_forest = max(global.wrld_biome_forest,
+        global.wrld_biome_plains);
 }
 
 

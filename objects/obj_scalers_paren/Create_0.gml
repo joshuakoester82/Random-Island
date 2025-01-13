@@ -49,6 +49,8 @@ function adjust_modifier() {
             }
         }
     }
+	
+	enforce_threshold_relationships();
 }
 
 function follow_screen() {
