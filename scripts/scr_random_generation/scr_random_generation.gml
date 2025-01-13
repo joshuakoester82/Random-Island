@@ -43,6 +43,7 @@ enum WRLD_TERRAIN {
 }
 
 function wrld_generate() {
+	show_debug_message($"height: {global.wrld_height}, width: {global.wrld_width}")
     global.wrld_grid = ds_grid_create(global.wrld_width, global.wrld_height);
     
     // First pass 

@@ -105,7 +105,7 @@ function draw_info() {
 	
 function click()
 {
-	if check_mouse_over()
+	if check_mouse_over() && is_clickable
 	{
 		if mouse_check_button_pressed(mb_left)
 		{
