@@ -44,7 +44,7 @@ if keyboard_check_pressed(vk_f1)
 	is_overlay = !is_overlay;	
 }
 
-if keyboard_check_pressed(vk_printscreen)
+if keyboard_check_pressed(vk_f12)
 {
 	copy_global_values_to_clipboard();	
 }
