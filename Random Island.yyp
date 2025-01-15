@@ -47,6 +47,7 @@
     {"id":{"name":"obj_world_generation_controller","path":"objects/obj_world_generation_controller/obj_world_generation_controller.yy",},},
     {"id":{"name":"Room_Generate_Map","path":"rooms/Room_Generate_Map/Room_Generate_Map.yy",},},
     {"id":{"name":"scr_random_generation","path":"scripts/scr_random_generation/scr_random_generation.yy",},},
+    {"id":{"name":"scr_save_load","path":"scripts/scr_save_load/scr_save_load.yy",},},
     {"id":{"name":"spr_bounding_box_controllers","path":"sprites/spr_bounding_box_controllers/spr_bounding_box_controllers.yy",},},
     {"id":{"name":"spr_tiles","path":"sprites/spr_tiles/spr_tiles.yy",},},
   ],

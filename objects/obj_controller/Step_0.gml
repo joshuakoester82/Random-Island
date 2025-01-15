@@ -54,3 +54,4 @@ if keyboard_check_pressed(vk_escape)
 	reset_global_values();	
 }
 
+show_debug_message(zoom)

@@ -1,8 +1,13 @@
+init_xscale = image_xscale;
+init_yscale = image_yscale;
 depth = -100;
 gui_x = x;
 gui_y = y;
 base_width = camera_get_view_width(view_camera[0]);
 base_height = camera_get_view_height(view_camera[0]);
+
+// enums
+enum BUTTON {MAPSIZE, SAVE, LOAD};
 
 // Variables that child objects will set
 parameter_name = "";      // Display name
@@ -13,6 +18,7 @@ max_value = 1;            // Maximum allowed value
 is_dragging = false;      // Track if currently dragging
 is_clickable = false;     // Is this a clickable object type?
 click_value = -1          // default click_value
+click_identifier = -1     // identifies the type of click item it is
 
 
 
@@ -66,8 +72,8 @@ function follow_screen() {
     x = cam_x + (gui_x * width_ratio);
     y = cam_y + (gui_y * height_ratio);
     
-    image_xscale = 6 / (room_width / view_width);
-    image_yscale = image_xscale;
+    image_xscale = (6 / (room_width / view_width)) * init_xscale;
+    image_yscale = (6 / (room_width / view_width)) * init_yscale;
 }
 
 function check_mouse_over() {
@@ -77,9 +83,16 @@ function check_mouse_over() {
 function draw_info() {
     if (obj_controller.is_overlay) {
         image_index = (check_mouse_over() || is_dragging || (is_clickable && click_value == global.wrld_width)) ? 1 : 0;
-        
+        var _string = "";
         var current_value = variable_global_get(parameter_variable);
-        var _string = $"{parameter_name}: {current_value}";
+		if (click_identifier == -1)
+		{
+			_string = $"{parameter_name}: {current_value}";
+		}
+		else
+		{
+			_string = $"{parameter_name}";
+		}
         var _sep = 10;
         var _width = 256;
         var _xscale = image_xscale;
@@ -88,7 +101,7 @@ function draw_info() {
         var _padding = 4 * (6 / (room_width / camera_get_view_width(view_camera[0])));
         
         draw_self();
-        draw_text_ext_transformed(bbox_left + _padding, bbox_top + _padding, _string, _sep, _width, _xscale, _yscale, _angle);
+        draw_text_ext_transformed(bbox_left + _padding, bbox_top + _padding, _string, _sep, _width, _xscale / init_xscale, _yscale / init_yscale, _angle);
         
 		if !is_clickable
 		{
@@ -105,14 +118,42 @@ function draw_info() {
     }
 }
 	
-function click()
-{
-	if check_mouse_over() && is_clickable
-	{
-		if mouse_check_button_pressed(mb_left)
-		{
-			global.wrld_width = click_value;
-			global.wrld_height = click_value;
-		}
-	}
+function click() {
+    if check_mouse_over() && is_clickable {
+        if mouse_check_button_pressed(mb_left) {
+            switch(click_identifier) {
+                case BUTTON.MAPSIZE:
+                    global.wrld_width = click_value;
+                    global.wrld_height = click_value;
+                    break;
+                
+                case BUTTON.LOAD:
+                    var _filename = get_open_filename("Map files|*.map", "");
+                    if (_filename != "") {
+                        if (load_world(_filename)) {
+                            with(obj_tile) {
+                                instance_destroy();    
+                            }
+                            obj_world_generation_controller.create_tile_grid();
+                            obj_world_generation_controller.set_tiles_from_map();
+                        } else {
+                            show_debug_message("Failed to load world from: " + _filename);
+                        }
+                    }
+                    break;
+                
+                case BUTTON.SAVE:
+                    var _filename = get_save_filename_ext("Map files|*.map", "world", "", "Save World");
+                    if (_filename != "") {
+                        if (!save_world(_filename)) {
+                            show_debug_message("Failed to save world to: " + _filename);
+                        }
+                    }
+                    break;
+                
+                default:
+                    break;
+            }
+        }
+    }
 }

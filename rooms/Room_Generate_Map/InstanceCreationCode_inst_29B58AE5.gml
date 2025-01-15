@@ -6,3 +6,4 @@ min_value = 0;           // Minimum allowed value
 max_value = 1;           // Maximum allowed value
 click_value = global.map_size_medium;
 is_clickable = true;
+click_identifier = BUTTON.MAPSIZE;
